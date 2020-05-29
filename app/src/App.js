@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import { reducer } from "./reducers/index";
 import "./App.css";
-import axios from "axios";
 
-import StoriesList from "./components/StoriesList";
+import Stories from "./components/Stories";
 
+const store = createStore(reducer, applyMiddleware(thunk));
 function App() {
-	const [stories, setStories] = useState([]);
-
-	useEffect(() => {
-		axios
-			.get("https://binaryjazz.us/wp-json/genrenator/v1/story/25/")
-			.then((res) => {
-        console.log("data", res);
-        setStories(res.data)
-			})
-			.catch((err) => console.log(err));
-	},[]);
-
-	return <div className="App">
-    <h1>Music Genre Stories</h1>
-    <StoriesList stories={stories}/>
-  </div>;
+	return (
+		<Provider store={store}>
+			<div className="App">
+				<h1>Joke App</h1>
+				<Stories />
+			</div>
+		</Provider>
+	);
 }
 
 export default App;
